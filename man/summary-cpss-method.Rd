@@ -7,9 +7,9 @@
 \S4method{summary}{cpss}(object)
 }
 \arguments{
-\item{object}{object}
+\item{object}{object from cpss}
 
-\item{cpss}{cpss}
+\item{cpss}{cpss class}
 }
 \description{
 summary method

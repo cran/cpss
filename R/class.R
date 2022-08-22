@@ -1,4 +1,4 @@
-#' cpss: an \code{S4} class which collects data and information required for further change-point analyses and summaries
+#' cpss: an \proglang{S4} class which collects data and information required for further change-point analyses and summaries
 #'
 #' @slot dat ANY.
 #' @slot mdl character.
@@ -12,7 +12,7 @@
 #' @slot S_vals numeric.
 #' @slot SC_vals matrix.
 #' @slot call list.
-#' @slot update.inputs list.
+#' @slot update_inputs list.
 #'
 #' @export
 #'
@@ -39,274 +39,328 @@ setClass(
     S_vals = "numeric",
     SC_vals = "matrix",
     call = "list",
-    update.inputs = "list"
+    update_inputs = "list"
   )
 )
 
-#' tool1
+#' Generic functions and methods: dat
 #'
-#' @param x x
-#' @name tool1
+#' @param cpss cpss class
+#' @param x object from cpss
+#' @param value value assigned to x
+#' @name dat
 NULL
 #> NULL
 
-#' tool2
-#'
-#' @param x x
-#' @param value value
-#' @name tool2
-NULL
-#> NULL
-
-#' tool3
-#'
-#' @param cpss cpss
-#' @param x x
-#' @name tool3
-NULL
-#> NULL
-
-#' tool4
-#'
-#' @param cpss cpss
-#' @param x x
-#' @param value value
-#' @name tool4
-NULL
-#> NULL
-
-#' @rdname tool1
+#' @rdname dat
 #' @export
 setGeneric("dat", function(x)
   standardGeneric("dat"))
-#' @rdname tool2
+#' @rdname dat
 #' @export
 setGeneric("dat<-", function(x, value)
   standardGeneric("dat<-"))
-#' @rdname tool3
+#' @rdname dat
 #' @export
 setMethod("dat", "cpss", function(x)
   x@dat)
-#' @rdname tool4
+#' @rdname dat
 #' @export
 setMethod("dat<-", "cpss", function(x, value) {
   x@dat <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: mdl
+#'
+#' @inheritParams dat
+#' @name mdl
+NULL
+#> NULL
+
+#' @rdname mdl
 #' @export
 setGeneric("mdl", function(x)
   standardGeneric("mdl"))
-#' @rdname tool2
+#' @rdname mdl
 #' @export
 setGeneric("mdl<-", function(x, value)
   standardGeneric("mdl<-"))
-#' @rdname tool3
+#' @rdname mdl
 #' @export
 setMethod("mdl", "cpss", function(x)
   x@mdl)
-#' @rdname tool4
+#' @rdname mdl
 #' @export
 setMethod("mdl<-", "cpss", function(x, value) {
   x@mdl <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: algo
+#'
+#' @inheritParams dat
+#' @name algo
+NULL
+#> NULL
+
+#' @rdname algo
 #' @export
 setGeneric("algo", function(x)
   standardGeneric("algo"))
-#' @rdname tool2
+#' @rdname algo
 #' @export
 setGeneric("algo<-", function(x, value)
   standardGeneric("algo<-"))
-#' @rdname tool3
+#' @rdname algo
 #' @export
 setMethod("algo", "cpss", function(x)
   x@algo)
-#' @rdname tool4
+#' @rdname algo
 #' @export
 setMethod("algo<-", "cpss", function(x, value) {
   x@algo <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: algo_param_dim
+#'
+#' @inheritParams dat
+#' @name algo_param_dim
+NULL
+#> NULL
+
+#' @rdname algo_param_dim
 #' @export
 setGeneric("algo_param_dim", function(x)
   standardGeneric("algo_param_dim"))
-#' @rdname tool2
+#' @rdname algo_param_dim
 #' @export
 setGeneric("algo_param_dim<-", function(x, value)
   standardGeneric("algo_param_dim<-"))
-#' @rdname tool3
+#' @rdname algo_param_dim
 #' @export
 setMethod("algo_param_dim", "cpss", function(x)
   x@algo_param_dim)
-#' @rdname tool4
+#' @rdname algo_param_dim
 #' @export
 setMethod("algo_param_dim<-", "cpss", function(x, value) {
   x@algo_param_dim <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: SC
+#'
+#' @inheritParams dat
+#' @name SC
+NULL
+#> NULL
+
+#' @rdname SC
 #' @export
 setGeneric("SC", function(x)
   standardGeneric("SC"))
-#' @rdname tool2
+#' @rdname SC
 #' @export
 setGeneric("SC<-", function(x, value)
   standardGeneric("SC<-"))
-#' @rdname tool3
+#' @rdname SC
 #' @export
 setMethod("SC", "cpss", function(x)
   x@SC)
-#' @rdname tool4
+#' @rdname SC
 #' @export
 setMethod("SC<-", "cpss", function(x, value) {
   x@SC <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: ncps
+#'
+#' @inheritParams dat
+#' @name ncps
+NULL
+#> NULL
+
+#' @rdname ncps
 #' @export
 setGeneric("ncps", function(x)
   standardGeneric("ncps"))
-#' @rdname tool2
+#' @rdname ncps
 #' @export
 setGeneric("ncps<-", function(x, value)
   standardGeneric("ncps<-"))
-#' @rdname tool3
+#' @rdname ncps
 #' @export
 setMethod("ncps", "cpss", function(x)
   x@ncps)
-#' @rdname tool4
+#' @rdname ncps
 #' @export
 setMethod("ncps<-", "cpss", function(x, value) {
   x@ncps <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: pelt_pen
+#'
+#' @inheritParams dat
+#' @name pelt_pen
+NULL
+#> NULL
+
+#' @rdname pelt_pen
 #' @export
 setGeneric("pelt_pen", function(x)
   standardGeneric("pelt_pen"))
-#' @rdname tool2
+#' @rdname pelt_pen
 #' @export
 setGeneric("pelt_pen<-", function(x, value)
   standardGeneric("pelt_pen<-"))
-#' @rdname tool3
+#' @rdname pelt_pen
 #' @export
 setMethod("pelt_pen", "cpss", function(x)
   x@pelt_pen)
-#' @rdname tool4
+#' @rdname pelt_pen
 #' @export
 setMethod("pelt_pen<-", "cpss", function(x, value) {
   x@pelt_pen <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: cps
+#'
+#' @inheritParams dat
+#' @name cps
+NULL
+#> NULL
+
+#' @rdname cps
 #' @export
 setGeneric("cps", function(x)
   standardGeneric("cps"))
-#' @rdname tool2
+#' @rdname cps
 #' @export
 setGeneric("cps<-", function(x, value)
   standardGeneric("cps<-"))
-#' @rdname tool3
+#' @rdname cps
 #' @export
 setMethod("cps", "cpss", function(x)
   x@cps)
-#' @rdname tool4
+#' @rdname cps
 #' @export
 setMethod("cps<-", "cpss", function(x, value) {
   x@cps <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: params
+#'
+#' @inheritParams dat
+#' @name params
+NULL
+#> NULL
+
+#' @rdname params
 #' @export
 setGeneric("params", function(x)
   standardGeneric("params"))
-#' @rdname tool2
+#' @rdname params
 #' @export
 setGeneric("params<-", function(x, value)
   standardGeneric("params<-"))
-#' @rdname tool3
+#' @rdname params
 #' @export
 setMethod("params", "cpss", function(x)
   x@params)
-#' @rdname tool4
+#' @rdname params
 #' @export
 setMethod("params<-", "cpss", function(x, value) {
   x@params <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: S_vals
+#'
+#' @inheritParams dat
+#' @name S_vals
+NULL
+#> NULL
+
+#' @rdname S_vals
 #' @export
 setGeneric("S_vals", function(x)
   standardGeneric("S_vals"))
-#' @rdname tool2
+#' @rdname S_vals
 #' @export
 setGeneric("S_vals<-", function(x, value)
   standardGeneric("S_vals<-"))
-#' @rdname tool3
+#' @rdname S_vals
 #' @export
 setMethod("S_vals", "cpss", function(x)
   x@S_vals)
-#' @rdname tool4
+#' @rdname S_vals
 #' @export
 setMethod("S_vals<-", "cpss", function(x, value) {
   x@S_vals <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: SC_vals
+#'
+#' @inheritParams dat
+#' @name SC_vals
+NULL
+#> NULL
+
+#' @rdname SC_vals
 #' @export
 setGeneric("SC_vals", function(x)
   standardGeneric("SC_vals"))
-#' @rdname tool2
+#' @rdname SC_vals
 #' @export
 setGeneric("SC_vals<-", function(x, value)
   standardGeneric("SC_vals<-"))
-#' @rdname tool3
+#' @rdname SC_vals
 #' @export
 setMethod("SC_vals", "cpss", function(x)
   x@SC_vals)
-#' @rdname tool4
+#' @rdname SC_vals
 #' @export
 setMethod("SC_vals<-", "cpss", function(x, value) {
   x@SC_vals <- value
   x
 })
 
-#' @rdname tool1
+#' Generic functions and methods: update_inputs
+#'
+#' @inheritParams dat
+#' @name update_inputs
+NULL
+#> NULL
+
+#' @rdname update_inputs
 #' @export
-setGeneric("upcalle.inputs", function(x)
-  standardGeneric("upcalle.inputs"))
-#' @rdname tool2
+setGeneric("update_inputs", function(x)
+  standardGeneric("update_inputs"))
+#' @rdname update_inputs
 #' @export
-setGeneric("upcalle.inputs<-", function(x, value)
-  standardGeneric("upcalle.inputs<-"))
-#' @rdname tool3
+setGeneric("update_inputs<-", function(x, value)
+  standardGeneric("update_inputs<-"))
+#' @rdname update_inputs
 #' @export
-setMethod("upcalle.inputs", "cpss", function(x)
-  x@upcalle.inputs)
-#' @rdname tool4
+setMethod("update_inputs", "cpss", function(x)
+  x@update_inputs)
+#' @rdname update_inputs
 #' @export
-setMethod("upcalle.inputs<-", "cpss", function(x, value) {
-  x@upcalle.inputs <- value
+setMethod("update_inputs<-", "cpss", function(x, value) {
+  x@update_inputs <- value
   x
 })
 
 #' summary method
 #'
-#' @param cpss cpss
-#' @param object object
+#' @param cpss cpss class
+#' @param object object from cpss
 #' @export
 setMethod("summary", "cpss", function(object) {
   mdl.cat <- switch(
@@ -327,14 +381,14 @@ setMethod("summary", "cpss", function(object) {
   )
   SC.cat <- switch(
     object@SC,
-    CV = "cross validation",
-    MS = "multiple splitting"
+    CV = "cross-validation",
+    MS = "multiple-splitting"
   )
   if (object@algo %in% c("SN", "BS", "WBS")) {
     cat(
       "Detecting changes in ",
       mdl.cat,
-      ":\n",
+      " (if at least one exists):\n",
       "\t Change searching algorithm: ",
       algo.cat,
       "\n",
@@ -348,7 +402,7 @@ setMethod("summary", "cpss", function(object) {
     cat(
       "\n",
       object@ncps,
-      " change points are detected at locations:\n",
+      " change-points are detected at locations:\n",
       "\t",
       paste0(object@cps, "  "),
       sep = ""
@@ -357,7 +411,7 @@ setMethod("summary", "cpss", function(object) {
     cat(
       "Detecting changes in ",
       mdl.cat,
-      ":\n",
+      " (if at least one exists):\n",
       "\t Change searching algorithm: ",
       algo.cat,
       "\n",
@@ -371,7 +425,7 @@ setMethod("summary", "cpss", function(object) {
     cat(
       "\n",
       object@ncps,
-      " change points are detected (with a penalty constant ",
+      " change-points are detected (with a penalty constant ",
       object@pelt_pen,
       ") at locations:\n",
       "\t",
@@ -379,7 +433,7 @@ setMethod("summary", "cpss", function(object) {
       sep = ""
     )
   } else {
-    stop("Not supported searching algorithm!")
+    stop("Not yet supported change searching algorithm!")
   }
 })
 
@@ -422,9 +476,9 @@ pal.GW <- matrix(
 
 #' plot method
 #'
-#' @param cpss cpss
-#' @param obj obj
-#' @param type type
+#' @param cpss cpss class
+#' @param obj object from cpss
+#' @param type type of visualization
 #' @param x x
 #' @param y y
 #' @param ... ...
@@ -454,6 +508,8 @@ setMethod("plot", "cpss", function(obj,
         geom_vline(xintercept = obj@cps, color = pal.GW[5, 4], linetype = 2) +
         labs(title = "") +
         theme_light()
+    } else {
+      stop("Not yet supported data structure! Currently, the plot method with \"type = \'scatter\'\" only works for univariate mean change models.")
     }
 
   } else if (type == "path") {
@@ -490,21 +546,29 @@ setMethod("plot", "cpss", function(obj,
 
     if (obj@mdl == "meanvar" & ncol(obj@dat) <= 5) {
       df <- coef(obj)
-      df1 <- tibble(
-        Var = factor(rep(1:nrow(df$mu), each = ncol(df$mu))),
-        Segment = rep(1:ncol(df$mu), nrow(df$mu)),
-        mu = c(t(df$mu))
-      )
+      df1 <- expand.grid(X = 1, Y = 1:dim(df$Sigma)[1])
+      df1 <- do.call("rbind", rep(list(df1), dim(df$Sigma)[3]))
+      df1$Z <- c(df$mu)
+      df1 <- as_tibble(df1) %>%
+        mutate(
+          Segment = rep(1:dim(df$Sigma)[3], each = (dim(df$Sigma)[1]))
+        )
       p1 <- df1 %>%
         ggplot() +
-        geom_point(aes(.data$Segment, .data$mu, color = .data$Var, shape = .data$Var)) +
-        geom_line(aes(.data$Segment, .data$mu, color = .data$Var)) +
-        scale_color_manual(values = pal.GW[2, c(1, 5, 2:4, 6)]) +
+        geom_tile(aes(.data$X, dim(df$Sigma)[1] + 1 - .data$Y, fill = .data$Z)) +
+        geom_text(aes(.data$X, dim(df$Sigma)[1] + 1 - .data$Y, label = round(.data$Z, 2)), size = 3) +
+        facet_grid(cols = vars(.data$Segment)) +
+        scale_fill_gradient2(
+          low = pal.GW[1, 1],
+          mid = pal.GW[5, 1],
+          high = pal.GW[1, 5]
+        ) +
         labs(x = "", y = "", title = "Estimated mean") +
         theme_light() +
         theme(
           legend.position = "none"
         )
+
       df2 <- expand.grid(X = 1:dim(df$Sigma)[1], Y = 1:dim(df$Sigma)[1])
       df2 <- do.call("rbind", rep(list(df2), dim(df$Sigma)[3]))
       df2$Z <- c(df$Sigma)
@@ -514,8 +578,8 @@ setMethod("plot", "cpss", function(obj,
         )
       p2 <- df2 %>%
         ggplot() +
-        geom_tile(aes(.data$X, .data$Y, fill = .data$Z)) +
-        geom_text(aes(.data$X, .data$Y, label = round(.data$Z, 2)), size = 3) +
+        geom_tile(aes(.data$X, dim(df$Sigma)[1] + 1 - .data$Y, fill = .data$Z)) +
+        geom_text(aes(.data$X, dim(df$Sigma)[1] + 1 - .data$Y, label = round(.data$Z, 2)), size = 3) +
         facet_grid(cols = vars(.data$Segment)) +
         scale_fill_gradient2(
           low = pal.GW[1, 1],
@@ -532,17 +596,19 @@ setMethod("plot", "cpss", function(obj,
       grid.arrange(
         p1, p2, nrow = 2
       )
+    } else {
+      stop("Not yet supported data structure! Currently, the plot method with \"type = \'coef\'\" only works for simultaneous mean and covariance change models with data dimension no larger than 5 for a better visualization.")
     }
 
   } else {
-    stop("Not supported plot type!")
+    stop("Not yet supported visualization type!")
   }
 })
 
 #' coef method
 #'
-#' @param cpss cpss
-#' @param object object
+#' @param cpss cpss class
+#' @param object object from cpss
 #' @export
 setMethod("coef", "cpss", function(object) {
   if (object@mdl == "mean") {
@@ -601,31 +667,36 @@ setMethod("coef", "cpss", function(object) {
 
 #' update method
 #'
-#' @param cpss cpss
-#' @param object object
-#' @param dim_update dim_update
+#' @param cpss cpss class
+#' @param object object from cpss
+#' @param dim_update model dimension to update
 #' @export
 setMethod("update", "cpss", function(object, dim_update) {
   if (object@algo == "PELT") {
-    ncps_max <- object@update.inputs$ncps_max
+    ncps_max <- object@update_inputs$ncps_max
     pelt_pen_val <- dim_update
   } else {
     ncps_max <- dim_update
     pelt_pen_val <- NULL
   }
-  res <- EST(object@dat, object@update.inputs$n, object@update.inputs$g_subdat, object@update.inputs$g_param, object@update.inputs$g_cost, object@algo, object@update.inputs$dist_min, ncps_max, pelt_pen_val, object@update.inputs$pelt_K, object@update.inputs$wbs_nintervals, object@mdl, object@update.inputs$g_smry, object@update.inputs$easy_cost, object@update.inputs$param.opt)
+  res <- EST(object@dat, object@update_inputs$n, object@update_inputs$g_subdat, object@update_inputs$g_param, object@update_inputs$g_cost, object@algo, object@update_inputs$dist_min, ncps_max, pelt_pen_val, object@update_inputs$pelt_K, object@update_inputs$wbs_nintervals, object@mdl, object@update_inputs$g_smry, object@update_inputs$easy_cost, object@update_inputs$param.opt)
   if (object@algo == "PELT") {
     cps_update <- sort(res)
   } else {
     cps_update <- sort(res[ncps_max, 1:ncps_max])
   }
   params_update <- list()
-  ID <- rep(1:(length(cps_update) + 1), c(cps_update, object@update.inputs$n) - c(0, cps_update))
+  ID <- rep(1:(length(cps_update) + 1), c(cps_update, object@update_inputs$n) - c(0, cps_update))
   for (j in 1:(length(cps_update) + 1)) {
-    subdat_j <- object@update.inputs$g_subdat(object@dat, ID == j)
-    params_update[[j]] <- object@update.inputs$g_param(subdat_j, object@update.inputs$param.opt)
+    subdat_j <- object@update_inputs$g_subdat(object@dat, ID == j)
+    params_update[[j]] <- object@update_inputs$g_param(subdat_j, object@update_inputs$param.opt)
   }
+  object@cps <- cps_update
+  object@ncps <- length(object@cps)
   object@params <- params_update
-  params_update <- coef(object)
-  return(out = list(cps_update = cps_update, params_update = params_update))
+  object@algo_param_dim <- dim_update
+  object@call$call <- "The model has been updated!"
+  return(object)
+  # params_update <- coef(object)
+  # return(out = list(cps_update = cps_update, params_update = params_update))
 })

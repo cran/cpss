@@ -1,22 +1,22 @@
 #' Detecting changes in mean
 #'
-#' @param dataset a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector could also be acceptable for univariate observations.
-#' @param algorithm a character string specifying the change-point searching algorithm, one of four state-of-the-art candidates "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
-#' @param dist_min an integer indicating the minimum distance between two successive candidate change-points, with a default value \eqn{floor(log(n))}.
-#' @param ncps_max an integer indicating the maximum number of change-points searched for, with a default value \eqn{ceiling(n^0.4)}.
-#' @param pelt_pen_val a numeric vector specifying the collection of candidate values of the penalty if the "PELT" algorithm is used.
-#' @param pelt_K a numeric value to adjust the pruning tactic, usually is taken to be 0 if negative log-likelihood is used as a cost; more details can be found in Killick et al. (2012).
-#' @param wbs_nintervals an integer indicating the number of random intervals drawn in the "WBS" algorithm and a default value 500 is used.
-#' @param criterion a character string indicating which model selection criterion, "cross- validation" ("CV") or "multiple-splitting" ("MS"), is used.
-#' @param times an integer indicating how many times of sample-splitting should be performed; if "CV" criterion is used, it should be set as 2.
-#' @param Sigma if a numeric matrix (or constant) is supplied, it would be taken as the value of known overall covariance (or variance). By default it is set as \code{NULL}, and the common covariance of the data is estimated based on the difference method, i.e.,
-#' \deqn{\widehat{\Sigma} = \frac{1}{2(n-1)}\sum_{i=1}^{n-1} (Y_i-Y_{i+1})(Y_i-Y_{i+1})';}
+#' @param dataset a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector is also acceptable for univariate observations.
+#' @param algorithm a character string specifying the change-point searching algorithm, one of the following choices: "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
+#' @param dist_min an integer specifying minimum searching distance (length of feasible segments).
+#' @param ncps_max an integer specifying an upper bound of the number of true change-points.
+#' @param pelt_pen_val a numeric vector specifying candidate values of the penalty only if \code{algorithm = "PELT"}.
+#' @param pelt_K a numeric value for pruning adjustment only if \code{algorithm = "PELT"}. It is usually taken to be 0 if the negative log-likelihood is used as a cost, see Killick et al. (2012).
+#' @param wbs_nintervals an integer specifying the number of random intervals drawn only if \code{algorithm = "WBS"}, see Fryzlewicz (2014).
+#' @param criterion a character string specifying the model selection criterion, "CV" ("cross-validation") or "MS" ("multiple-splitting").
+#' @param times an integer specifying how many times of sample-splitting should be performed; It should be 2 if \code{criterion = "CV"}.
+#' @param Sigma if a numeric matrix (or constant) is supplied, it will be taken as the value of the common covariance (or variance). By default it is \code{NULL}, and the covariance is estimated by \deqn{\widehat{\Sigma} = \frac{1}{2(n-1)}\sum_{i=1}^{n-1} (Y_i-Y_{i+1})(Y_i-Y_{i+1})';}
 #'
 #' @return \code{cpss.mean} returns an object of an \proglang{S4} class, called "\code{cpss}", which collects data and information required for further change-point analyses and summaries. See \code{\link{cpss.custom}}.
 #' @export
 #'
 #' @references
-#' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500):1590–1598.
+#' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500): 1590–1598.
+#' Fryzlewicz, P. (2014). Wild binary segmentation for multiple change-point detection. The Annals of Statistics, 42(6): 2243–2281.
 #' @seealso \code{\link{cpss.meanvar}} \code{\link{cpss.var}}
 #' @examples
 #' library("cpss")
@@ -28,15 +28,15 @@
 #' ep <- 7 * rnorm(n)
 #' y <- mu + ep
 #' \donttest{
-#' res <- cpss.mean(y, algorithm = "SN", dist_min = 10, ncps_max = 20)
+#' res <- cpss.mean(y, algorithm = "SN", ncps_max = 20)
 #' summary(res)
 #' # 205  267  307  471  512  820  897  1332  1557  1601  1659
 #' plot(res, type = "scatter")
 #' plot(res, type = "path")
 #' out <- update(res, dim_update = 12)
-#' out$cps_update
+#' out@cps
 #' # 205  267  307  471  512  820  897 1332 1557 1601 1659 1769
-#' out$params_update
+#' # coef(out)
 #' }
 cpss.mean <- function(dataset, algorithm = "BS", dist_min = floor(log(n)), ncps_max = ceiling(n^0.4), pelt_pen_val = NULL, pelt_K = 0, wbs_nintervals = 500, criterion = "CV", times = 2, Sigma = NULL) {
 
@@ -71,22 +71,23 @@ cpss.mean <- function(dataset, algorithm = "BS", dist_min = floor(log(n)), ncps_
 
 #' Detecting changes in (co)variance
 #'
-#' @param dataset a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector could also be acceptable for univariate observations.
-#' @param algorithm a character string specifying the change-point searching algorithm, one of four state-of-the-art candidates "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
-#' @param dist_min an integer indicating the minimum distance between two successive candidate change-points, with a default value \eqn{floor(log(n))}.
-#' @param ncps_max an integer indicating the maximum number of change-points searched for, with a default value \eqn{ceiling(n^0.4)}.
-#' @param pelt_pen_val a numeric vector specifying the collection of candidate values of the penalty if the "PELT" algorithm is used.
-#' @param pelt_K a numeric value to adjust the pruning tactic, usually is taken to be 0 if negative log-likelihood is used as a cost; more details can be found in Killick et al. (2012).
-#' @param wbs_nintervals an integer indicating the number of random intervals drawn in the "WBS" algorithm and a default value 500 is used.
-#' @param criterion a character string indicating which model selection criterion, "cross- validation" ("CV") or "multiple-splitting" ("MS"), is used.
-#' @param times an integer indicating how many times of sample-splitting should be performed; if "CV" criterion is used, it should be set as 2.
-#' @param mu if a numeric vector or constant is supplied, it would be taken as the value of known overall mean. By default it is set as \code{NULL}, and the common mean of the data is estimated by the sample mean based on the entire data set.
+#' @param dataset a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector is also acceptable for univariate observations.
+#' @param algorithm a character string specifying the change-point searching algorithm, one of the following choices: "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
+#' @param dist_min an integer specifying minimum searching distance (length of feasible segments).
+#' @param ncps_max an integer specifying an upper bound of the number of true change-points.
+#' @param pelt_pen_val a numeric vector specifying candidate values of the penalty only if \code{algorithm = "PELT"}.
+#' @param pelt_K a numeric value for pruning adjustment only if \code{algorithm = "PELT"}. It is usually taken to be 0 if the negative log-likelihood is used as a cost, see Killick et al. (2012).
+#' @param wbs_nintervals an integer specifying the number of random intervals drawn only if \code{algorithm = "WBS"}, see Fryzlewicz (2014).
+#' @param criterion a character string specifying the model selection criterion, "CV" ("cross-validation") or "MS" ("multiple-splitting").
+#' @param times an integer specifying how many times of sample-splitting should be performed; It should be 2 if \code{criterion = "CV"}.
+#' @param mu If a numeric vector or constant is supplied, it will be taken as the value of the common mean. By default it is \code{NULL}, and the mean is estimated by the sample mean.
 #'
 #' @return \code{cpss.var} returns an object of an \proglang{S4} class, called "\code{cpss}", which collects data and information required for further change-point analyses and summaries. See \code{\link{cpss.custom}}.
 #' @export
 #'
 #' @references
-#' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500):1590–1598.
+#' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500): 1590–1598.
+#' Fryzlewicz, P. (2014). Wild binary segmentation for multiple change-point detection. The Annals of Statistics, 42(6): 2243–2281.
 #' @seealso \code{\link{cpss.meanvar}} \code{\link{cpss.mean}}
 #' @examples
 #' library("cpss")
@@ -139,21 +140,21 @@ cpss.var <- function(dataset, algorithm = "BS", dist_min = floor(log(n)), ncps_m
 
 #' Detecting changes in mean and (co)variance
 #'
-#' @param dataset a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector could also be acceptable for univariate observations.
-#' @param algorithm a character string specifying the change-point searching algorithm, one of four state-of-the-art candidates "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
-#' @param dist_min an integer indicating the minimum distance between two successive candidate change-points, with a default value \eqn{floor(log(n))}.
-#' @param ncps_max an integer indicating the maximum number of change-points searched for, with a default value \eqn{ceiling(n^0.4)}.
-#' @param pelt_pen_val a numeric vector specifying the collection of candidate values of the penalty if the "PELT" algorithm is used.
-#' @param pelt_K a numeric value to adjust the pruning tactic, usually is taken to be 0 if negative log-likelihood is used as a cost; more details can be found in Killick et al. (2012).
-#' @param wbs_nintervals an integer indicating the number of random intervals drawn in the "WBS" algorithm and a default value 500 is used.
-#' @param criterion a character string indicating which model selection criterion, "cross- validation" ("CV") or "multiple-splitting" ("MS"), is used.
-#' @param times an integer indicating how many times of sample-splitting should be performed; if "CV" criterion is used, it should be set as 2.
-#'
+#' @param dataset a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector is also acceptable for univariate observations.
+#' @param algorithm a character string specifying the change-point searching algorithm, one of the following choices: "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
+#' @param dist_min an integer specifying minimum searching distance (length of feasible segments).
+#' @param ncps_max an integer specifying an upper bound of the number of true change-points.
+#' @param pelt_pen_val a numeric vector specifying candidate values of the penalty only if \code{algorithm = "PELT"}.
+#' @param pelt_K a numeric value for pruning adjustment only if \code{algorithm = "PELT"}. It is usually taken to be 0 if the negative log-likelihood is used as a cost, see Killick et al. (2012).
+#' @param wbs_nintervals an integer specifying the number of random intervals drawn only if \code{algorithm = "WBS"}, see Fryzlewicz (2014).
+#' @param criterion a character string specifying the model selection criterion, "CV" ("cross-validation") or "MS" ("multiple-splitting").
+#' @param times an integer specifying how many times of sample-splitting should be performed; It should be 2 if \code{criterion = "CV"}.
 #' @return \code{cpss.meanvar} returns an object of an \proglang{S4} class, called "\code{cpss}", which collects data and information required for further change-point analyses and summaries. See \code{\link{cpss.custom}}.
 #' @export
 #'
 #' @references
 #' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500):1590–1598.
+#' Fryzlewicz, P. (2014). Wild binary segmentation for multiple change-point detection. The Annals of Statistics, 42(6): 2243–2281.
 #' @seealso \code{\link{cpss.mean}} \code{\link{cpss.var}}
 #' @examples
 #' library("cpss")

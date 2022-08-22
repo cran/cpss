@@ -90,7 +90,7 @@ g_cost_glm <- function(dat, param) {
     x <- dat[, -1]
     w <- rep(1, length(y))
   }
-  eta <- drop(x %*% param$coefficients)
+  eta <- drop(as.matrix(x) %*% as.matrix(param$coefficients))
   mu <- family$linkinv(eta)
   sum(family$dev.resids(y, mu, w))
   # param$deviance

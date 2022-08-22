@@ -19,27 +19,27 @@ cpss.em(
 )
 }
 \arguments{
-\item{dataset}{a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector could also be acceptable for univariate observations.}
+\item{dataset}{a numeric matrix of dimension \eqn{n\times d}, where each row represents an observation and each column stands for a variable. A numeric vector is also acceptable for univariate observations.}
 
-\item{family}{a character string indicating the underlying distribution. Currently, detecting changes in binomial ("\code{binom}"), multinomial ("\code{multinom}"), Poisson ("\code{pois}"), exponential ("\code{exp}"), geometric ("\code{geom}"), dirichlet ("\code{diri}"), gamma ("\code{gamma}"), beta ("\code{beta}"), chi-square ("\code{chisq}") and inverse gaussian ("\code{invgauss}") distributions are supported.}
+\item{family}{a character string specifying the underlying distribution. In the current version, detecting changes in binomial ("\code{binom}"), multinomial ("\code{multinom}"), Poisson ("\code{pois}"), exponential ("\code{exp}"), geometric ("\code{geom}"), Dirichlet ("\code{diri}"), gamma ("\code{gamma}"), beta ("\code{beta}"), chi-square ("\code{chisq}") and inverse gaussian ("\code{invgauss}") distributions are supported.}
 
-\item{size}{an integer indicating the number of trials if \code{family} = "binom" or \code{family} = "multinom".}
+\item{size}{an integer indicating the number of trials only if \code{family = "binom"} or \code{family = "multinom"}.}
 
-\item{algorithm}{a character string specifying the change-point searching algorithm, one of four state-of-the-art candidates "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.}
+\item{algorithm}{a character string specifying the change-point searching algorithm, one of the following choices: "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.}
 
-\item{dist_min}{an integer indicating the minimum distance between two successive candidate change-points, with a default value \eqn{floor(log(n))}.}
+\item{dist_min}{an integer specifying minimum searching distance (length of feasible segments).}
 
-\item{ncps_max}{an integer indicating the maximum number of change-points searched for, with a default value \eqn{ceiling(n^0.4)}.}
+\item{ncps_max}{an integer specifying an upper bound of the number of true change-points.}
 
-\item{pelt_pen_val}{a numeric vector specifying the collection of candidate values of the penalty if the "PELT" algorithm is used.}
+\item{pelt_pen_val}{a numeric vector specifying candidate values of the penalty only if \code{algorithm = "PELT"}.}
 
-\item{pelt_K}{a numeric value to adjust the pruning tactic, usually is taken to be 0 if negative log-likelihood is used as a cost; more details can be found in Killick et al. (2012).}
+\item{pelt_K}{a numeric value for pruning adjustment only if \code{algorithm = "PELT"}. It is usually taken to be 0 if the negative log-likelihood is used as a cost, see Killick et al. (2012).}
 
-\item{wbs_nintervals}{an integer indicating the number of random intervals drawn in the "WBS" algorithm and a default value 500 is used.}
+\item{wbs_nintervals}{an integer specifying the number of random intervals drawn only if \code{algorithm = "WBS"}, see Fryzlewicz (2014).}
 
-\item{criterion}{a character string indicating which model selection criterion, "cross- validation" ("CV") or "multiple-splitting" ("MS"), is used.}
+\item{criterion}{a character string specifying the model selection criterion, "CV" ("cross-validation") or "MS" ("multiple-splitting").}
 
-\item{times}{an integer indicating how many times of sample-splitting should be performed; if "CV" criterion is used, it should be set as 2.}
+\item{times}{an integer specifying how many times of sample-splitting should be performed; It should be 2 if \code{criterion = "CV"}.}
 }
 \value{
 \code{cpss.em} returns an object of an \proglang{S4} class, called "\code{cpss}", which collects data and information required for further change-point analyses and summaries. See \code{\link{cpss.custom}}.
@@ -59,8 +59,7 @@ y <- unlist(lapply(seq(1, length(tau) + 1), function(k) {
   rexp(seg_len[k], theta[k])
 }))
 res <- cpss.em(
-  y, family = "exp", algorithm = "WBS",
-  dist_min = 10, ncps_max = 10,
+  y, family = "exp", algorithm = "WBS", ncps_max = 10,
   criterion = "MS", times = 10
 )
 cps(res)
@@ -68,6 +67,8 @@ cps(res)
 }
 \references{
 Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500):1590–1598.
+
+Fryzlewicz, P. (2014). Wild binary segmentation for multiple change-point detection. The Annals of Statistics, 42(6): 2243–2281.
 }
 \seealso{
 \code{\link{cpss.meanvar}} \code{\link{cpss.mean}} \code{\link{cpss.var}}

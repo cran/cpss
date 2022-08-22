@@ -17,7 +17,7 @@ EST <- function(dataset, n, g_subdat, g_param, g_cost, algorithm, dist_min, ncps
       temp_n_row <- length(res[res[, 1] > 0, 1])
       res <- res[1:temp_n_row, ]
     } else {
-      stop("Not supported searching algorithm!")
+      stop("Not yet supported change searching algorithm!")
     }
 
   } else {
@@ -41,7 +41,7 @@ EST <- function(dataset, n, g_subdat, g_param, g_cost, algorithm, dist_min, ncps
         temp_n_row <- length(res[res[, 1] > 0, 1])
         res <- res[1:temp_n_row, ]
       } else {
-        stop("Not supported searching algorithm!")
+        stop("Not yet supported change searching algorithm!")
       }
 
     } else {
@@ -61,7 +61,7 @@ EST <- function(dataset, n, g_subdat, g_param, g_cost, algorithm, dist_min, ncps
         temp_n_row <- length(res[res[, 1] > 0, 1])
         res <- res[1:temp_n_row, ]
       } else {
-        stop("Not supported searching algorithm!")
+        stop("Not yet supported change searching algorithm!")
       }
 
     }
@@ -76,6 +76,7 @@ EST <- function(dataset, n, g_subdat, g_param, g_cost, algorithm, dist_min, ncps
     idx <- !apply(is.na(res), 1, all)
     res <- matrix(res[idx, ], sum(idx), ncps_max)
   }
+
   return(res)
 }
 
@@ -109,7 +110,7 @@ COPS <- function(dataset, n, indices, g_subdat, g_param, g_cost, algorithm, dist
     for (k in 1:length(pelt_pen_val)) {
       cps_k_subdat <- res_est[res_est[, k] > 0, k]
       if (length(cps_k_subdat) == 0) {
-        stop(paste0("No change point is detected as the value of penalty ", pelt_pen_val[k], " is too large!"))
+        stop(paste0("No change-point is detected as the value of penalty ", pelt_pen_val[k], " is too large!"))
       }
       cps_k_subdat <- cps_k_subdat[length(cps_k_subdat):1]
       cps_k <- (1:n)[indices][cps_k_subdat]
@@ -137,7 +138,7 @@ COPS <- function(dataset, n, indices, g_subdat, g_param, g_cost, algorithm, dist
       stop("The values of the penalty may yield the same change-points!")
     }
   } else {
-    stop("Not supported searching algorithm!")
+    stop("Not yet supported change searching algorithm!")
   }
   res$cost_val <- cost_val
   return(res)
@@ -145,99 +146,80 @@ COPS <- function(dataset, n, indices, g_subdat, g_param, g_cost, algorithm, dist
 
 #' Detecting changes in uers-customized models
 #'
-#' @param dataset an \code{ANY} object that could be of any form such as a vector, matrix, tensor, list, etc.
-#' @param n an integer indicating the sample size of the \code{dataset}.
-#' @param g_subdat a customized R function of two arguments \code{dat} and \code{indices}, that returns a subset of the \code{dat} (inheriting the class from that of \code{dataset}) according to given indices along the observed time orders. The argument \code{indices} is a logical vector with \code{TRUE} indicating selected indices.
-#' @param param.opt an \code{ANY} object that could be of any form, specifying additional global constant parameters beyond the interested parameters.
-#' @param g_param a customized R function of two arguments, \code{dat} and \code{param.opt}, that returns estimates of interested parameters that minimizes users-specified cost for a data set \code{dat}. The returned object could be of any class such as a numeric value, vector, matrix, list, etc. The argument \code{param.opt} might be used in the estimation procedures.
-#' @param g_cost a customized R function of two arguments, \code{dat} and \code{param}, that returns a numeric value of associated cost for a data set \code{dat}, under the knowledge of the interested parameters being \code{param}. The argument \code{param} inherits from the class of the returned object of the function \code{g_param}. If \code{param.opt} is needed to evaluate the cost, they should be packed into \code{param} when defining the function \code{g_param}.
-#' @param algorithm a character string specifying the change-point searching algorithm, one of four state-of-the-art candidates "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
-#' @param dist_min an integer indicating the minimum distance between two successive candidate change-points, with a default value \eqn{floor(log(n))}.
-#' @param ncps_max an integer indicating the maximum number of change-points searched for, with a default value \eqn{ceiling(n^0.4)}.
-#' @param pelt_pen_val a numeric vector specifying the collection of candidate values of the penalty if the "PELT" algorithm is used.
-#' @param pelt_K a numeric value to adjust the pruning tactic, usually is taken to be 0 if negative log-likelihood is used as a cost; more details can be found in Killick et al. (2012).
-#' @param wbs_nintervals an integer indicating the number of random intervals drawn in the "WBS" algorithm and a default value 500 is used.
-#' @param criterion a character string indicating which model selection criterion, "cross- validation" ("CV") or "multiple-splitting" ("MS"), is used.
-#' @param times an integer indicating how many times of sample-splitting should be performed; if "CV" criterion is used, it should be set as 2.
-#' @param model a character string indicating the considered change model, and will be set as "custom" if not provided.
-#' @param g_smry a customized R function of two arguments \code{dataset} and \code{param.opt}, which calculates the summary statistics that will be needed in evaluations of the cost. The returned object is a list for convenience.
-#' @param easy_cost a customized R function of three arguments \code{data_smry}, \code{s} and \code{e}, that evaluates the cost for a date segment form observed time point $s$ to $e$. The argument \code{data_smry} inherits from the returned list of the function \code{g_smry}.
+#' @param dataset an \code{ANY} object that could be a vector, matrix, tensor, list, etc.
+#' @param n an integer indicating the sample size of the data \code{dataset}.
+#' @param g_subdat a customized \proglang{R} function of two arguments \code{dat} and \code{indices}, which extracts a subset of data \code{dat} according to a collection of time indices \code{indices}. The returned object inherits the class from that of \code{dataset}. The argument \code{dat} inherits the class from that of \code{dataset}, and the argument \code{indices} is a logical vector with \code{TRUE}s indicating extracted indices.
+#' @param param.opt an \code{ANY} object specifying additional constant parameters needed for parameter estimation or cost evaluation beyond unknown parameters.
+#' @param g_param a customized R function of two arguments \code{dat} (cf. \code{dat} of \code{g\_subdat}) and \code{param.opt} (cf. \code{param.opt} of \code{cpss.custom}), which returns estimated parameters based on the data segment \code{dat}. It could return a numeric value, vector, matrix, list, etc.
+#' @param g_cost a customized \proglang{R} function of two arguments \code{dat} (cf. \code{dat} of \code{g\_subdat}) and \code{param}, which returns a numeric value of the associated cost for data segment \code{dat} with parameters \code{param}. The argument \code{param} inherits the class from that of the returned object of \code{g\_param}.
+#' @param algorithm a character string specifying the change-point searching algorithm, one of the following choices: "SN" (segment neighborhood), "BS" (binary segmentation), "WBS" (wild binary segmentation) and "PELT" (pruned exact linear time) algorithms.
+#' @param dist_min an integer specifying minimum searching distance (length of feasible segments).
+#' @param ncps_max an integer specifying an upper bound of the number of true change-points.
+#' @param pelt_pen_val a numeric vector specifying candidate values of the penalty only if \code{algorithm = "PELT"}.
+#' @param pelt_K a numeric value for pruning adjustment only if \code{algorithm = "PELT"}. It is usually taken to be 0 if the negative log-likelihood is used as a cost, see Killick et al. (2012).
+#' @param wbs_nintervals an integer specifying the number of random intervals drawn only if \code{algorithm = "WBS"}, see Fryzlewicz (2014).
+#' @param criterion a character string specifying the model selection criterion, "CV" ("cross-validation") or "MS" ("multiple-splitting").
+#' @param times an integer specifying how many times of sample-splitting should be performed; It should be 2 if \code{criterion = "CV"}.
+#' @param model a character string indicating the considered change model.
+#' @param g_smry a customized R function of two arguments \code{dataset} (cf. \code{dataset} of \code{cpss.custom}) and \code{param.opt} (cf. \code{param.opt} of \code{cpss.custom}), which calculates the summary statistics that will be used for cost evaluation. The returned object is a list.
+#' @param easy_cost a customized R function of three arguments \code{data_smry}, \code{s} and \code{e}, which evaluates the value of the cost for a date segment form observed time point $s$ to $e$. The argument \code{data_smry} inherits the class from that of the returned object of \code{g_smry}.
 #' @return \code{cpss.custom} returns an object of an \proglang{S4} class, called "\code{cpss}", which collects data and information required for further change-point analyses and summaries.
 #' \describe{
-#'   \item{\code{dat}}{an \code{ANY} object inheriting form the type of user-input data}
-#'   \item{\code{mdl}}{a character string describing considered change-point model}
-#'   \item{\code{algo}}{a character string indicating user-specified change-point searching algorithm}
-#'   \item{\code{algo_param_dim}}{an integer indicating user-specified maximum number of change-points searched for if the algorithm is chosen among "SN", "BS" and "WBS", or a numeric vector collecting user-specified values for the penalty if the algorithm is "PELT"}
-#'   \item{\code{SC}}{a character string indicating model selection criterion}
-#'   \item{\code{ncps}}{an integer giving estimated number of change-points based on the entire data}
-#'   \item{\code{pelt_pen}}{a numeric value indicating selected penalty value if the "PELT" algorithm is performed based on the entire data}
-#'   \item{\code{cps}}{a numeric vector of detected change-points based on the entire data}
-#'   \item{\code{params}}{a list object, each of whose members is a list containing estimated parameters in the corresponding segment}
-#'   \item{\code{S_vals}}{a numeric vector of candidate model dimensions in terms of a sequence of numbers of change-points or values of penalty}
-#'   \item{\code{SC_vals}}{a numeric matrix, each column of which records the values of criterion based on the validation data under the corresponding model dimension (\code{S_vals}), and each row of which represents a splitting at each time}
+#'   \item{\code{dat}}{data set}
+#'   \item{\code{mdl}}{considered change-point model}
+#'   \item{\code{algo}}{change-point searching algorithm}
+#'   \item{\code{algo_param_dim}}{user-specified upper bound of the number of true change-points if \code{algorithm = "SN"/"BS"/"WBS"}, or user-specified candidate values of the penalty only if \code{algorithm = "PELT"}}
+#'   \item{\code{SC}}{model selection criterion}
+#'   \item{\code{ncps}}{estimated number of change-points}
+#'   \item{\code{pelt_pen}}{selected value of the penalty only if \code{algorithm = "PELT"}}
+#'   \item{\code{cps}}{a vector of estimated locations of change-points}
+#'   \item{\code{params}}{a list object, each member is a list containing estimated parameters in the associated data segment}
+#'   \item{\code{S_vals}}{a numeric vector of candidate model dimensions in terms of a sequence of numbers of change-points or values of the penalty}
+#'   \item{\code{SC_vals}}{a numeric matrix, each column records the values of the  criterion based on the validation data split under the corresponding model dimension (\code{S_vals}), and each row represents a splitting at each time}
 #' }
 #' @export
 #'
 #' @references
-#' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500):1590–1598.
+#' Killick, R., Fearnhead, P., and Eckley, I. A. (2012). Optimal Detection of Changepoints With a Linear Computational Cost. Journal of the American Statistical Association, 107(500): 1590–1598.
+#'
+#' Fryzlewicz, P. (2014). Wild binary segmentation for multiple change-point detection. The Annals of Statistics, 42(6): 2243–2281.
 #' @examples
+#' \donttest{
 #' library("cpss")
-#' if (!requireNamespace("L1pack", quietly = TRUE)) {
-#'   stop("Please install the package \"L1pack\".")
-#' }
-#' set.seed(666)
-#' n <- 1000
-#' tau <- c(250, 500, 750)
-#' tau_ext <- c(0, tau, n)
-#' be0 <- c(1, 1, 0, -1)
-#' be <- c(1, -1, -1, 1)
-#' seg_len <- diff(c(0, tau, n))
-#' x <- rnorm(n)
-#' eta <- unlist(lapply(seq(1, length(tau) + 1), function(k) {
-#'   be0[k] + be[k] * x[(tau_ext[k] + 1):tau_ext[k + 1]]
-#' }))
-#' ep <- L1pack::rlaplace(n)
-#' y <- eta + ep
 #' g_subdat_l1 <- function(dat, indices) {
-#'   matrix(dat[indices, ], sum(indices), ncol(dat))
+#'   dat[indices]
 #' }
 #' g_param_l1 <- function(dat, param.opt = NULL) {
-#'   y <- dat[, 1]
-#'   x <- dat[, -1]
-#'   return(L1pack::l1fit(x, y)$coefficients)
+#'   return(median(dat))
 #' }
 #' g_cost_l1 <- function(dat, param) {
-#'   y <- dat[, 1]
-#'   x <- dat[, -1]
-#'   return(sum(abs(y - cbind(1, x) %*% as.matrix(param))))
+#'   return(sum(abs(dat - param)))
 #' }
 #' res <- cpss.custom(
-#'   dataset = cbind(y, x), n = n,
+#'   dataset = well, n = length(well),
 #'   g_subdat = g_subdat_l1, g_param = g_param_l1, g_cost = g_cost_l1,
-#'   algorithm = "BS", dist_min = 10, ncps_max = 10,
-#'   g_smry = NULL, easy_cost = NULL
+#'   ncps_max = 11
 #' )
 #' summary(res)
-#' # 250  500  744
-#' do.call(rbind,res@params)
-#' # Intercept          X
-#' # [1,]  0.9327557  0.9558247
-#' # [2,]  0.9868086 -1.0254999
-#' # [3,] -0.0464067 -0.9076744
-#' # [4,] -0.9746133  0.9671701
+#' plot(well)
+#' abline(v = res@cps, col = "red")
+#' }
 #' @importFrom methods new
 cpss.custom <- function(dataset, n, g_subdat, g_param, g_cost, algorithm = "BS", dist_min = floor(log(n)), ncps_max = ceiling(n^0.4), pelt_pen_val = NULL, pelt_K = 0, wbs_nintervals = 500, criterion = "CV", times = 2, model = NULL, g_smry = NULL, easy_cost = NULL, param.opt = NULL) {
 
   out <- new("cpss")
   out@dat <- dataset
   out@mdl <- ifelse(is.null(model), "custom", model)
+  if (!(out@mdl %in% c("mean", "var", "meanvar", "glm", "lm", "em"))) {
+    out@mdl <- "custom"
+  }
   out@algo <- algorithm
   if (out@algo %in% c("SN", "BS", "WBS")) {
     out@algo_param_dim <- ncps_max
   } else if (out@algo == "PELT") {
     out@algo_param_dim <- pelt_pen_val
   } else {
-    stop("Not supported searching algorithm!")
+    stop("Not yet supported change searching algorithm!")
   }
   out@SC <- criterion
   out@S_vals <- 1:ncps_max
@@ -247,7 +229,7 @@ cpss.custom <- function(dataset, n, g_subdat, g_param, g_cost, algorithm = "BS",
   is_O <- idx %% 2 == 1
   n_O <- sum(is_O)
   if (out@SC == "CV" & times > 2) {
-    stop("The argument \"times\" must be 2 if use \"CV\" criterion!")
+    stop("Argument \"times\" should be 2 if Argument \"criterion\" is set to be \"CV\"!")
   }
   idx_O <- vector("list", times)
   if (out@SC == "CV") {
@@ -260,7 +242,7 @@ cpss.custom <- function(dataset, n, g_subdat, g_param, g_cost, algorithm = "BS",
       idx_O[[i]] <- is_O_MS
     }
   } else {
-    stop("Not supported slection criterion!")
+    stop("Unsupported model slection criterion!")
   }
 
   # searching and selection
@@ -272,7 +254,7 @@ cpss.custom <- function(dataset, n, g_subdat, g_param, g_cost, algorithm = "BS",
   out@ncps <- which.min(apply(out@SC_vals, 2, sum))
 
   # refit
-  res_refit <- EST(dataset, n, g_subdat, g_param, g_cost, out@algo, dist_min, out@ncps, pelt_pen_val, pelt_K, wbs_nintervals, model, g_smry, easy_cost, param.opt)
+  res_refit <- EST(out@dat, n, g_subdat, g_param, g_cost, out@algo, dist_min, out@ncps, pelt_pen_val, pelt_K, wbs_nintervals, out@mdl, g_smry, easy_cost, param.opt)
   if (out@algo %in% c("SN", "BS", "WBS")) {
     out@cps <- sort(res_refit[out@ncps, 1:out@ncps])
   } else if (out@algo == "PELT") {
@@ -280,7 +262,7 @@ cpss.custom <- function(dataset, n, g_subdat, g_param, g_cost, algorithm = "BS",
     out@pelt_pen <- pelt_pen_val[pelt_idx]
     out@cps <- sort(res_refit[res_refit[, pelt_idx] > 0, pelt_idx])
   } else {
-    stop("Not supported searching algorithm!")
+    stop("Not yet supported change searching algorithm!")
   }
   ID <- rep(1:(length(out@cps) + 1), c(out@cps, n) - c(0, out@cps))
   for (j in 1:(length(out@cps) + 1)) {
@@ -288,20 +270,20 @@ cpss.custom <- function(dataset, n, g_subdat, g_param, g_cost, algorithm = "BS",
     out@params[[j]] <- g_param(subdat_j, param.opt)
   }
 
-  update.inputs <- list()
-  update.inputs$n <- n
-  update.inputs$g_subdat <- g_subdat
-  update.inputs$g_param <- g_param
-  update.inputs$g_cost <- g_cost
-  update.inputs$dist_min <- dist_min
-  update.inputs$ncps_max <- ncps_max
-  update.inputs$pelt_pen_val <- pelt_pen_val
-  update.inputs$pelt_K <- pelt_K
-  update.inputs$wbs_nintervals <- wbs_nintervals
-  update.inputs$g_smry <- g_smry
-  update.inputs$easy_cost <- easy_cost
-  update.inputs$param.opt <- param.opt
-  out@update.inputs <- update.inputs
+  update_inputs <- list()
+  update_inputs$n <- n
+  update_inputs$g_subdat <- g_subdat
+  update_inputs$g_param <- g_param
+  update_inputs$g_cost <- g_cost
+  update_inputs$dist_min <- dist_min
+  update_inputs$ncps_max <- ncps_max
+  update_inputs$pelt_pen_val <- pelt_pen_val
+  update_inputs$pelt_K <- pelt_K
+  update_inputs$wbs_nintervals <- wbs_nintervals
+  update_inputs$g_smry <- g_smry
+  update_inputs$easy_cost <- easy_cost
+  update_inputs$param.opt <- param.opt
+  out@update_inputs <- update_inputs
 
   if (out@mdl == "custom") {
     out@call <- list(call = match.call())

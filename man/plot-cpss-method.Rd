@@ -7,9 +7,9 @@
 \S4method{plot}{cpss}(obj, type, x = c(), y = c(), ...)
 }
 \arguments{
-\item{obj}{obj}
+\item{obj}{object from cpss}
 
-\item{type}{type}
+\item{type}{type of visualization}
 
 \item{x}{x}
 
@@ -17,7 +17,7 @@
 
 \item{...}{...}
 
-\item{cpss}{cpss}
+\item{cpss}{cpss class}
 }
 \description{
 plot method

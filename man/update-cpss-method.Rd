@@ -7,11 +7,11 @@
 \S4method{update}{cpss}(object, dim_update)
 }
 \arguments{
-\item{object}{object}
+\item{object}{object from cpss}
 
-\item{dim_update}{dim_update}
+\item{dim_update}{model dimension to update}
 
-\item{cpss}{cpss}
+\item{cpss}{cpss class}
 }
 \description{
 update method

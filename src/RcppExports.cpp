@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // get_cost_mean
 double get_cost_mean(List dat_smry, int s, int e);
 RcppExport SEXP _cpss_get_cost_mean(SEXP dat_smrySEXP, SEXP sSEXP, SEXP eSEXP) {

@@ -3,9 +3,9 @@
 \docType{class}
 \name{cpss-class}
 \alias{cpss-class}
-\title{cpss: an \code{S4} class which collects data and information required for further change-point analyses and summaries}
+\title{cpss: an \proglang{S4} class which collects data and information required for further change-point analyses and summaries}
 \description{
-cpss: an \code{S4} class which collects data and information required for further change-point analyses and summaries
+cpss: an \proglang{S4} class which collects data and information required for further change-point analyses and summaries
 }
 \section{Slots}{
 
@@ -34,6 +34,6 @@ cpss: an \code{S4} class which collects data and information required for furthe
 
 \item{\code{call}}{list.}
 
-\item{\code{update.inputs}}{list.}
+\item{\code{update_inputs}}{list.}
 }}
 
